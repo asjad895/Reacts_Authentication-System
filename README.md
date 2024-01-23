@@ -15,6 +15,5 @@ To run the React Signup Verification Boilerplate locally, follow these steps:
 
 4. **Start the App:**
 
-```npm start
-```
+```npm start```
 
