@@ -1,6 +1,6 @@
 # Running the Frontend App Locally
 
-To run the React Signup Verification Boilerplate locally, follow these steps:
+To run the React App locally, follow these steps:
 
 1. **Install NodeJS and NPM:**
    Make sure you have NodeJS and NPM installed on your machine. If not, you can download and install them from [https://nodejs.org](https://nodejs.org).
