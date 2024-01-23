@@ -11,9 +11,8 @@ To run the React App locally, follow these steps:
 
 3. **Install NPM Packages:**
    Open the command line in the project root folder (where the `package.json` is located) and run the following command to install all required npm packages:
-   ```npm install```
+```npm install```
 
 4. **Start the App:**
 
 ```npm start```
-
