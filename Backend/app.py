@@ -1,5 +1,5 @@
 from flask import Flask
-import json,requests
+import json,requests,os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, request
 from sqlalchemy.exc import IntegrityError
@@ -10,10 +10,13 @@ from sqlalchemy.orm import sessionmaker
 from flask_cors import CORS
 from app.utils.helpers import *
 from flask_migrate import Migrate, migrate
-
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail, Message
+from datetime import timedelta
 # main api development
 app = Flask(__name__)
 CORS(app) 
+app.config.from_pyfile('config.py') 
 # databse setup
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -24,7 +27,17 @@ Base.metadata.create_all(engine)
 # Use the session factory to create sessions for interacting with the database
 session = Session()
 migrate = Migrate(app, db)
-
+#  Mail Setup
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
+app.config['SECRET_KEY'] = 'asjad' 
+# Configure token serializer
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 # api
 @app.route('/')
 def home():
@@ -39,12 +52,22 @@ def Register():
         email=data['email']
         print("Received JSON data:", data)
         # Create a new user instance
-        new_user = User(user_name=user,email=email,hash_password=data['password'] )
+        new_user = User(user_name=user,email=email,hash_password=data['password'],isverified=True) 
+        # send_verification_email(user=user,email=email)
+        # Generate and store token
+        token = serializer.dumps({'email': email})
+        print("Generated token",token)
+        # Send verification email
+        msg = Message('Email Verification', sender='mdasjad895@gmail.com', recipients=[email])
+        msg.body = f"Click here to verify your email: http://localhost:3000/verify-email?token={token}"
+        # msg.html = "<b>Hey Paul</b>, sending you this email from my <a href='https://google.com'>Flask app</a>, lmk if it works"
+        # r=mail.send(msg)
+        # print(r)
+        print("email sent......")
+        # add user
         session.add(new_user)
         session.commit()
-        # send_verification_email(user=user,email=email)
-        print("email sent......")
-        return jsonify({'sucess': 'User created successfully'}), 201
+        return jsonify({'sucess': 'User created successfully check your mail for verification'}), 201
     except IntegrityError as e:
         # duplicate
         print(e)
@@ -56,6 +79,22 @@ def Register():
         print(e)
         session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
+    
+@app.route('/verify_email', methods=['POST'])
+def verify_email():
+    data = request.get_json()
+    token = data.get('token') 
+    try:
+        if token == token:  
+            return jsonify({'message': 'Email verified successfully.'}), 200
+        else:
+            print("Token is invalid")
+            return jsonify({'error': 'Invalid token'}), 400
+
+    except Exception as e:
+        print("Exception:", str(e))
+        return jsonify({'error': 'Invalid or expired token'}), 400
+
     
 @app.route('/login', methods=['POST'])
 def login():
