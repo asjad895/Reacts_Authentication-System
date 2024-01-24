@@ -132,9 +132,10 @@ def login():
 def FetchAllUsers():
     try:
         tuser = session.query(User).all()
-        print("fetch data",tuser)
+        # print("fetch data",tuser)
             # Convert the query results to a list of dictionaries
-        result = [{'id': user.id, 'username': user.user_name, 'email':user.email,'password': user.hash_password} for user in tuser]
+        result = [{'id': user.id, 'username': user.user_name, 'email':user.email,'password': user.hash_password,'isverified':user.isverified} for user in tuser]
+        print(result)
         return jsonify(result), 200
     except Exception as e:
         print(e)
