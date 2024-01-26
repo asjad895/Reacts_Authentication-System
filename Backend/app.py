@@ -146,6 +146,7 @@ def get_user(username):
     user=session.query(User).filter(User.user_name==username).first()
     if user:
         user_data = {'name': user.user_name, 'email': user.email, 'password': user.hash_password}
+        print(user_data)
         return jsonify(user=user_data)
     else:
         return jsonify({'message': 'User not found'}), 404

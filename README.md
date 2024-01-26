@@ -7,8 +7,10 @@ To run the React App locally, follow these steps:
 
 2. **Download or Clone the Project:**
    Download or clone the project source code from the GitHub repository:
-   [React Auth](https://github.com/asjad895/Reacts_Authentication-System/tree/main)
-
+   [Backend](https://github.com/asjad895/Reacts_Authentication-System/tree/main)
+   Download Frontend code from this repo
+   [frontend app](https://github.com/asjad895/app) and copy all ```app/``` dir code in this repo code ```Frontend/app``` dir
+   Go to Frontend/app dir
 3. **Install NPM Packages:**
    Open the command line in the project root folder (where the `package.json` is located) and run the following command to install all required npm packages:
 ```npm install```
@@ -16,3 +18,20 @@ To run the React App locally, follow these steps:
 4. **Start the App:**
 
 ```npm start```
+
+# Backend  
+
+1. Create python env ```python -m venv myvenv```
+2. activate env ```myvenv\Scripts\activate.bat```
+3. Go to Backend dir run ```pip install -r requirements.txt```
+4. run server ```python app.py```
+
+# Intract With Frontend UI
+
+![signup](res/signup.png)
+
+![login](res/login.png)
+
+![home](res/password.png)
+
+![Dashboard](res/dashboard.png)
